@@ -1,44 +1,32 @@
 /**
  * @interface Position
  * @description Представляет координаты объекта в 2D-пространстве.
+ * @property {number} x - Координата по оси X.
+ * @property {number} y - Координата по оси Y.
  */
 export interface Position {
-  /** @property {number} x - Координата по оси X. */
   x: number;
-  /** @property {number} y - Координата по оси Y. */
   y: number;
 }
 
 /**
  * @class Player
  * @description Представляет сущность игрока в игровом мире.
- * Содержит данные о его состоянии, такие как позиция, скорость и размер.
+ * @property {Position} position - Текущая позиция игрока (левый верхний угол).
+ * @property {{ y: number }} velocity - Скорость игрока по вертикали (положительное значение - вниз).
+ * @property {{ width: number; height: number }} size - Размеры игрока (ширина и высота).
+ * @property {boolean} isJumping - Флаг, указывающий, находится ли игрок в состоянии прыжка.
+ * @property {number} gravity - Сила гравитации, постоянно действующая на игрока.
  */
 export class Player {
-  /**
-   * @property {Position} position - Текущая позиция игрока (левый верхний угол).
-   */
   position: Position;
 
-  /**
-   * @property {{ y: number }} velocity - Скорость игрока по вертикали.
-   * Положительное значение - движение вниз, отрицательное - вверх.
-   */
   velocity: { y: number };
 
-  /**
-   * @property {{ width: number; height: number }} size - Размеры игрока (ширина и высота).
-   */
   size: { width: number; height: number };
 
-  /**
-   * @property {boolean} isJumping - Флаг, указывающий, находится ли игрок в состоянии прыжка.
-   */
   isJumping: boolean;
 
-  /**
-   * @property {number} gravity - Сила гравитации, постоянно действующая на игрока.
-   */
   gravity: number;
 
   /**
