@@ -1,3 +1,4 @@
+import { GameState } from './GameState';
 import { Obstacle } from './Obstacle';
 
 /**
@@ -7,7 +8,7 @@ import { Obstacle } from './Obstacle';
  * @property {number} speed - Текущая скорость движения мира (пикселей за кадр).
  * @property {number} backgroundOffset - Смещение фона/земли по оси X для иллюзии движения.
  * @property {Obstacle[]} obstacles - Массив активных препятствий.
- * @property {boolean} isGameOver - Флаг, указывающий, закончена ли игра.
+ * @property {GameState} gameState - Текущее состояние игры (ожидание, игра, конец).
  * @property {number} score - Текущий счет игрока.
  * @property {number} highScore - Лучший результат за сессию.
  * @property {number} obstacleSpawnTimer - Таймер для появления следующего препятствия.
@@ -21,7 +22,7 @@ export class World {
 
   obstacles: Obstacle[];
 
-  isGameOver: boolean;
+  gameState: GameState;
 
   score: number;
 
@@ -39,7 +40,7 @@ export class World {
     this.speed = initialSpeed;
     this.backgroundOffset = 0;
     this.obstacles = [];
-    this.isGameOver = false;
+    this.gameState = GameState.WaitingToStart;
     this.score = 0;
     this.highScore = 0;
     this.obstacleSpawnTimer = 0;

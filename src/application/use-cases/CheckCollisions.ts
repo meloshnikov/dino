@@ -1,11 +1,11 @@
-import { Player } from '../../domain/models/Player';
-import { Obstacle } from '../../domain/models/Obstacle';
+import { Player, Obstacle } from '../../domain/models';
 
 /**
- * Проверяет столкновение между игроком и препятствиями.
- * @param player - Объект игрока.
- * @param obstacles - Массив препятствий.
- * @returns {boolean} - Возвращает true, если есть столкновение, иначе false.
+ * @function checkCollisions
+ * @description Проверяет столкновение между игроком и препятствиями.
+ * @param {Player} player - Объект игрока.
+ * @param {Obstacle[]} obstacles - Массив препятствий.
+ * @returns {boolean} - True, если есть столкновение.
  */
 export const checkCollisions = (player: Player, obstacles: Obstacle[]): boolean => {
   const playerBox = {

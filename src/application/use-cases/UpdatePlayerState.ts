@@ -1,5 +1,4 @@
-import { Player } from '../../domain/models/Player';
-import { World } from '../../domain/models/World';
+import { Player, World } from '../../domain/models';
 
 /**
  * @function updatePlayerState
@@ -8,10 +7,7 @@ import { World } from '../../domain/models/World';
  * @param {World} world - Объект мира для получения информации о земле.
  */
 export const updatePlayerState = (player: Player, world: World) => {
-  // Если игра не окончена, применяем гравитацию
-  if (!world.isGameOver) {
-    player.velocity.y += player.gravity;
-  }
+  player.velocity.y += player.gravity;
   player.position.y += player.velocity.y;
 
   // Проверка столкновения с землей (работает всегда)

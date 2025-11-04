@@ -1,10 +1,9 @@
-import { World } from '../../domain/models/World';
-import { Obstacle } from '../../domain/models/Obstacle';
-import { GAME_CONFIG } from '../../infrastructure/config/gameConstants';
+import { World, Obstacle } from '../../domain/models';
+import { GAME_CONFIG } from '../../infrastructure/config';
 
 /**
  * @function getRandomInt
- * @description Вспомогательная функция для получения случайного целого числа в заданном диапазоне (включительно).
+ * @description Возвращает случайное целое число в заданном диапазоне.
  * @param {number} min - Минимальное значение.
  * @param {number} max - Максимальное значение.
  * @returns {number} - Случайное целое число.
@@ -14,19 +13,11 @@ const getRandomInt = (min: number, max: number) => {
 };
 
 /**
- * Обновляет состояние игрового мира на каждом кадре.
- * @param world - Объект игрового мира.
+ * @function updateWorldState
+ * @description Обновляет состояние игрового мира на каждом кадре.
+ * @param {World} world - Объект игрового мира.
  */
 export const updateWorldState = (world: World) => {
-  // Если игра окончена, остановить все обновления мира
-  if (world.isGameOver) {
-    // Если текущий счет больше рекорда, обновить рекорд
-    if (world.score > world.highScore) {
-      world.highScore = world.score;
-    }
-    return;
-  }
-
   // 1. Обновление счета
   world.score += 1;
 

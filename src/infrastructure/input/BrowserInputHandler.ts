@@ -1,6 +1,7 @@
 /**
  * @class BrowserInputHandler
- * @description Управляет вводом пользователя в браузере (клавиатура, мышь, касания).
+ * @description Управляет вводом пользователя (клавиатура, мышь, касания).
+ * @param {() => void} onJump - Колбэк-функция, вызываемая при действии прыжка.
  */
 export class BrowserInputHandler {
   private onJump: () => void;
@@ -11,10 +12,6 @@ export class BrowserInputHandler {
 
   private handleTouchStart: () => void;
 
-  /**
-   * @constructor
-   * @param {() => void} onJump - Колбэк-функция, вызываемая при действии прыжка.
-   */
   constructor(onJump: () => void) {
     this.onJump = onJump;
 
@@ -39,7 +36,7 @@ export class BrowserInputHandler {
 
   /**
    * @method destroy
-   * @description Удаляет все слушатели событий, чтобы избежать утечек памяти.
+   * @description Удаляет слушатели событий во избежание утечек памяти.
    */
   destroy() {
     window.removeEventListener('keydown', this.handleKeyDown);
