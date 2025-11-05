@@ -8,19 +8,22 @@ import { GameController } from '../controllers/GameController';
  * @param {React.RefObject<HTMLCanvasElement>} canvasRef - Ref на элемент canvas для отрисовки.
  */
 export const useGameController = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
-  const controllerRef = useRef<GameController | null>(null);
-
   useEffect(() => {
     if (!canvasRef.current) {
       return;
     }
 
-    const controller = new GameController(canvasRef.current);
-    controllerRef.current = controller;
-    controller.start();
+    let controller: GameController | null = null;
+
+    const init = async () => {
+      controller = await GameController.create(canvasRef.current!);
+      controller.start();
+    };
+
+    init();
 
     return () => {
-      controller.destroy();
+      controller?.destroy();
     };
   }, [canvasRef]);
 };

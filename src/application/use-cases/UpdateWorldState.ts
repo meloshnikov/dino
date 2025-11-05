@@ -34,16 +34,18 @@ export const updateWorldState = (world: World) => {
     );
 
     // Создание нового препятствия
-    const newObstacleHeight = getRandomInt(
-      GAME_CONFIG.OBSTACLE_MIN_HEIGHT,
-      GAME_CONFIG.OBSTACLE_MAX_HEIGHT
-    );
+    const obstacleTypes = [
+      { type: 'cactus-small', width: 44, height: 47 },
+      { type: 'cactus-large', width: 66, height: 71 },
+    ];
+    const selectedType = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
 
     const newObstacle: Obstacle = {
       x: GAME_CONFIG.CANVAS_WIDTH,
-      y: GAME_CONFIG.GROUND_LEVEL - newObstacleHeight,
-      width: GAME_CONFIG.OBSTACLE_WIDTH,
-      height: newObstacleHeight,
+      y: GAME_CONFIG.GROUND_LEVEL - selectedType.height + 10,
+      width: selectedType.width,
+      height: selectedType.height,
+      type: selectedType.type as 'cactus-small' | 'cactus-large',
     };
 
     world.obstacles.push(newObstacle);
@@ -58,5 +60,30 @@ export const updateWorldState = (world: World) => {
   // Удаляем препятствия, которые вышли за пределы экрана
   world.obstacles = world.obstacles.filter(
     (obstacle) => obstacle.x + obstacle.width > 0
+  );
+
+  // 5. Логика появления облаков
+  world.cloudSpawnTimer -= 1;
+  if (world.cloudSpawnTimer <= 0) {
+    world.cloudSpawnTimer = getRandomInt(100, 300); // Spawn clouds less frequently than obstacles
+
+    const newCloud = {
+      x: GAME_CONFIG.CANVAS_WIDTH,
+      y: getRandomInt(50, 150),
+      width: 92, // Original width of the cloud sprite
+      height: 28, // Original height of the cloud sprite
+      speed: world.speed * 0.5, // Slower speed for parallax effect
+    };
+
+    world.backgroundObjects.push(newCloud);
+  }
+
+  // 6. Движение и удаление облаков
+  world.backgroundObjects.forEach((cloud) => {
+    cloud.x -= cloud.speed;
+  });
+
+  world.backgroundObjects = world.backgroundObjects.filter(
+    (cloud) => cloud.x + cloud.width > 0
   );
 };

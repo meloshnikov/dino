@@ -10,5 +10,6 @@ export const playerJump = (player: Player) => {
     // Сила прыжка
     player.velocity.y = -15;
     player.isJumping = true;
+    player.animationState = 'jumping';
   }
 };

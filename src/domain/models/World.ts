@@ -1,6 +1,14 @@
 import { GameState } from './GameState';
 import { Obstacle } from './Obstacle';
 
+export interface BackgroundObject {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+}
+
 /**
  * @class World
  * @description Представляет сущность игрового мира.
@@ -8,6 +16,7 @@ import { Obstacle } from './Obstacle';
  * @property {number} speed - Текущая скорость движения мира (пикселей за кадр).
  * @property {number} backgroundOffset - Смещение фона/земли по оси X для иллюзии движения.
  * @property {Obstacle[]} obstacles - Массив активных препятствий.
+ * @property {BackgroundObject[]} backgroundObjects - Массив фоновых объектов (облака).
  * @property {GameState} gameState - Текущее состояние игры (ожидание, игра, конец).
  * @property {number} score - Текущий счет игрока.
  * @property {number} highScore - Лучший результат за сессию.
@@ -22,6 +31,8 @@ export class World {
 
   obstacles: Obstacle[];
 
+  backgroundObjects: BackgroundObject[];
+
   gameState: GameState;
 
   score: number;
@@ -29,6 +40,8 @@ export class World {
   highScore: number;
 
   obstacleSpawnTimer: number;
+
+  cloudSpawnTimer: number;
 
   /**
    * @constructor
@@ -40,9 +53,11 @@ export class World {
     this.speed = initialSpeed;
     this.backgroundOffset = 0;
     this.obstacles = [];
+    this.backgroundObjects = [];
     this.gameState = GameState.WaitingToStart;
     this.score = 0;
     this.highScore = 0;
     this.obstacleSpawnTimer = 0;
+    this.cloudSpawnTimer = 0;
   }
 }

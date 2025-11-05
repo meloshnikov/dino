@@ -29,6 +29,14 @@ export class Player {
 
   gravity: number;
 
+  animationState: 'running' | 'jumping' | 'collided';
+
+  animationFrame: number;
+
+  frameTime: number;
+
+  frameInterval: number;
+
   /**
    * @constructor
    * @param {Position} initialPos - Начальная позиция игрока.
@@ -45,5 +53,9 @@ export class Player {
     this.gravity = gravity;
     this.velocity = { y: 0 };
     this.isJumping = false;
+    this.animationState = 'running';
+    this.animationFrame = 0;
+    this.frameTime = 0;
+    this.frameInterval = 100; // ms per frame
   }
 }

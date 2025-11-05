@@ -18,7 +18,7 @@ export const GAME_CONFIG = {
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 300,
   PLAYER_INITIAL_POS: { x: 50, y: 250 },
-  PLAYER_SIZE: { width: 50, height: 50 },
+  PLAYER_SIZE: { width: 44, height: 47 },
   GRAVITY: 0.5,
   WORLD_INITIAL_SPEED: 5,
   GROUND_LEVEL: 250,

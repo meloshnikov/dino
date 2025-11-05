@@ -30,14 +30,28 @@ export class GameController {
 
   /**
    * @constructor
-   * @param {HTMLCanvasElement} canvas - HTML-элемент canvas для отрисовки.
+   * @param {CanvasRenderer} renderer - Готовый экземпляр рендерера.
    */
-  constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new CanvasRenderer(canvas);
+  private constructor(renderer: CanvasRenderer) {
+    this.renderer = renderer;
     this.player = GameController.createPlayer();
     this.world = GameController.createWorld();
     this.inputHandler = new BrowserInputHandler(this.handleInput.bind(this));
     this.resetGame();
+  }
+
+  /**
+   * @method create
+   * @public
+   * @static
+   * @description Асинхронно создает и инициализирует контроллер игры.
+   * @param {HTMLCanvasElement} canvas - HTML-элемент canvas для отрисовки.
+   * @returns {Promise<GameController>} - Экземпляр GameController.
+   */
+  public static async create(canvas: HTMLCanvasElement): Promise<GameController> {
+    const renderer = new CanvasRenderer(canvas);
+    await renderer.loadAssets();
+    return new GameController(renderer);
   }
 
   /**
@@ -104,15 +118,18 @@ export class GameController {
     }
   }
 
+  private lastTime: number = 0;
+
   /**
    * @method update
    * @private
    * @description Обновляет состояние игры, если она активна.
+   * @param {number} deltaTime - Время, прошедшее с последнего кадра (в мс).
    */
-  private update(): void {
+  private update(deltaTime: number): void {
     if (this.world.gameState !== GameState.Playing) return;
 
-    updatePlayerState(this.player, this.world);
+    updatePlayerState(this.player, this.world, deltaTime);
     updateWorldState(this.world);
 
     if (checkCollisions(this.player, this.world.obstacles)) {
@@ -127,9 +144,13 @@ export class GameController {
    * @method gameLoop
    * @private
    * @description Основной игровой цикл. Выполняет обновление и отрисовку каждого кадра.
+   * @param {number} timestamp - Текущее время от requestAnimationFrame.
    */
-  private gameLoop(): void {
-    this.update();
+  private gameLoop(timestamp: number): void {
+    const deltaTime = timestamp - this.lastTime;
+    this.lastTime = timestamp;
+
+    this.update(deltaTime);
     this.renderer.clear();
     this.renderer.draw(this.player, this.world);
     this.frameId = requestAnimationFrame(this.gameLoop.bind(this));
@@ -140,7 +161,8 @@ export class GameController {
    * @description Запускает игровой цикл.
    */
   public start(): void {
-    this.gameLoop();
+    this.lastTime = 0;
+    this.frameId = requestAnimationFrame(this.gameLoop.bind(this));
   }
 
   /**

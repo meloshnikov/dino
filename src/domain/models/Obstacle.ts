@@ -11,4 +11,5 @@ export interface Obstacle {
   y: number;
   width: number;
   height: number;
+  type: 'cactus-small' | 'cactus-large';
 }

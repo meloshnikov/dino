@@ -15,7 +15,7 @@ export const checkCollisions = (player: Player, obstacles: Obstacle[]): boolean 
     height: player.size.height,
   };
 
-  return obstacles.some((obstacle) => {
+  const hasCollision = obstacles.some((obstacle) => {
     const obstacleBox = {
       x: obstacle.x,
       y: obstacle.y,
@@ -24,11 +24,18 @@ export const checkCollisions = (player: Player, obstacles: Obstacle[]): boolean 
     };
 
     // Простое обнаружение столкновений AABB (Axis-Aligned Bounding Box)
-    return (
+    const collided = 
       playerBox.x < obstacleBox.x + obstacleBox.width &&
       playerBox.x + playerBox.width > obstacleBox.x &&
       playerBox.y < obstacleBox.y + obstacleBox.height &&
-      playerBox.y + playerBox.height > obstacleBox.y
-    );
+      playerBox.y + playerBox.height > obstacleBox.y;
+
+    return collided;
   });
+
+  if (hasCollision) {
+    player.animationState = 'collided';
+  }
+
+  return hasCollision;
 };
