@@ -17,6 +17,10 @@ export interface Position {
  * @property {{ width: number; height: number }} size - Размеры игрока (ширина и высота).
  * @property {boolean} isJumping - Флаг, указывающий, находится ли игрок в состоянии прыжка.
  * @property {number} gravity - Сила гравитации, постоянно действующая на игрока.
+ * @property {'running' | 'jumping' | 'collided'} animationState - Текущее состояние анимации игрока.
+ * @property {number} animationFrame - Текущий кадр анимации.
+ * @property {number} frameTime - Время, прошедшее с последнего кадра анимации.
+ * @property {number} frameInterval - Интервал между кадрами анимации.
  */
 export class Player {
   position: Position;

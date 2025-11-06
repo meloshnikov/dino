@@ -5,6 +5,7 @@
  * @property {number} y - Вертикальная координата (положение по оси Y).
  * @property {number} width - Ширина препятствия.
  * @property {number} height - Высота препятствия.
+ * @property {'cactus-small' | 'cactus-large'} type - Тип препятствия.
  */
 export interface Obstacle {
   x: number;

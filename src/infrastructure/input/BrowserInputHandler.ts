@@ -6,12 +6,25 @@
 export class BrowserInputHandler {
   private onJump: () => void;
 
+  /**
+   * @property { (e: KeyboardEvent) => void } handleKeyDown - обработчик нажатия клавиш
+   */
   private handleKeyDown: (e: KeyboardEvent) => void;
 
+  /**
+   * @property { () => void } handleMouseDown - обработчик нажатия мыши
+   */
   private handleMouseDown: () => void;
 
+  /**
+   * @property { () => void } handleTouchStart - обработчик касания
+   */
   private handleTouchStart: () => void;
 
+  /**
+   * @constructor
+   * @param {() => void} onJump - Колбэк-функция, вызываемая при действии прыжка.
+   */
   constructor(onJump: () => void) {
     this.onJump = onJump;
 

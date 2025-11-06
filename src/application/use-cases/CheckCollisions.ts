@@ -23,7 +23,6 @@ export const checkCollisions = (player: Player, obstacles: Obstacle[]): boolean 
       height: obstacle.height,
     };
 
-    // Простое обнаружение столкновений AABB (Axis-Aligned Bounding Box)
     const collided = 
       playerBox.x < obstacleBox.x + obstacleBox.width &&
       playerBox.x + playerBox.width > obstacleBox.x &&

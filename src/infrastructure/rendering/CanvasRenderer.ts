@@ -1,10 +1,8 @@
 import { IGameRenderer } from '../../application/ports/IGameRenderer';
 import { Player, World, GameState, Obstacle, BackgroundObject } from '../../domain/models';
 
-// Ассеты
 import playerRunRightSprite from '../../assets/Chrome_T-Rex_Right_Run.png';
 import playerRunLeftSprite from '../../assets/Chrome_T-Rex_Left_Run.png';
-import playerJumpSprite from '../../assets/Chrome_T-Rex_Left_Run.png';
 import playerDeadSprite from '../../assets/Chrome_T-Rex-Dead.webp.png';
 import cactusSmall from '../../assets/Chrome_1_Cactus.png';
 import cactusLarge from '../../assets/Chrome_3_Cactus.png';
@@ -17,16 +15,15 @@ import cloudSprite from '../../assets/Chrome_T-Rex-cloud.png';
  */
 export class CanvasRenderer implements IGameRenderer {
   private ctx: CanvasRenderingContext2D;
+
   private assets: Map<string, HTMLImageElement> = new Map();
-  
-  // Координаты спрайтов [x, y, width, height]
+
   private spriteCoords = {
     jumping: [0, 0, 88, 94],
     collided: [0, 0, 88, 94],
     'cactus-small': [0, 0, 34, 70],
     'cactus-large': [0, 0, 102, 70],
   };
-
 
   /**
    * @constructor
@@ -35,7 +32,7 @@ export class CanvasRenderer implements IGameRenderer {
   constructor(canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d')!;
   }
-  
+
   /**
    * @method loadAssets
    * @description Асинхронно загружает все игровые ассеты.
@@ -75,7 +72,7 @@ export class CanvasRenderer implements IGameRenderer {
     await Promise.all([
       this.loadImage('player-run-right', playerRunRightSprite),
       this.loadImage('player-run-left', playerRunLeftSprite),
-      this.loadImage('player-jump', playerJumpSprite),
+      this.loadImage('player-jump', playerRunLeftSprite),
       this.loadImage('player-dead', playerDeadSprite),
       this.loadImage('cactus-small', cactusSmall),
       this.loadImage('cactus-large', cactusLarge),
@@ -83,13 +80,14 @@ export class CanvasRenderer implements IGameRenderer {
     ]);
   }
 
-
   /**
    * @method clear
-   * @description Очищает холст.
+   * @description Очищает холст и заливает его цветом фона из мира.
+   * @param {World} world - Игровой мир для получения цвета фона.
    */
-  clear() {
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+  clear(world: World) {
+    this.ctx.fillStyle = world.backgroundColor;
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
   /**
@@ -99,7 +97,7 @@ export class CanvasRenderer implements IGameRenderer {
    * @param {World} world - Объект мира.
    */
   draw(player: Player, world: World) {
-    this.drawGame(player, world); // Всегда рисуем мир и игрока
+    this.drawGame(player, world);
 
     switch (world.gameState) {
       case GameState.WaitingToStart:
@@ -112,7 +110,7 @@ export class CanvasRenderer implements IGameRenderer {
         break;
     }
   }
-  
+
   /**
    * @method drawPlayer
    * @private
@@ -120,7 +118,10 @@ export class CanvasRenderer implements IGameRenderer {
    */
   private drawPlayer(player: Player) {
     let playerImage: HTMLImageElement | undefined;
-    let sX = 0, sY = 0, sW = 88, sH = 94;
+    let sX = 0;
+    let sY = 0;
+    let sW = 88;
+    let sH = 94;
 
     switch (player.animationState) {
       case 'running':
@@ -139,15 +140,17 @@ export class CanvasRenderer implements IGameRenderer {
         if (!playerImage) return;
         [sX, sY, sW, sH] = this.spriteCoords.collided;
         break;
+      default:
+        return;
     }
-    
+
     this.ctx.drawImage(
       playerImage,
-      sX, sY, sW, sH, // Source rect
-      player.position.x, player.position.y, player.size.width, player.size.height // Destination rect
+      sX, sY, sW, sH,
+      player.position.x, player.position.y, player.size.width, player.size.height
     );
   }
-  
+
   /**
    * @method drawObstacles
    * @private
@@ -183,20 +186,15 @@ export class CanvasRenderer implements IGameRenderer {
    * @description Отрисовывает основные элементы игры: мир, игрока, счет.
    */
   private drawGame(player: Player, world: World) {
-    // Отрисовка облаков
     this.drawBackgroundObjects(world.backgroundObjects);
 
-    // Отрисовка земли
     this.ctx.fillStyle = '#333';
     this.ctx.fillRect(0, world.groundLevel, this.ctx.canvas.width, 2);
 
-    // Отрисовка препятствий
     this.drawObstacles(world.obstacles);
 
-    // Отрисовка игрока
     this.drawPlayer(player);
 
-    // Отрисовка счета
     this.ctx.fillStyle = '#111';
     this.ctx.font = '20px Arial';
     this.ctx.textAlign = 'right';

@@ -131,12 +131,58 @@ export class GameController {
 
     updatePlayerState(this.player, this.world, deltaTime);
     updateWorldState(this.world);
+    this.updateBackgroundColor();
 
     if (checkCollisions(this.player, this.world.obstacles)) {
       this.world.gameState = GameState.GameOver;
       if (this.world.score > this.world.highScore) {
         this.world.highScore = this.world.score;
       }
+    }
+  }
+
+  /**
+   * @method interpolateColor
+   * @private
+   * @static
+   * @description Линейно интерполирует между двумя цветами.
+   * @param {number[]} color1 - Начальный цвет в формате [r, g, b].
+   * @param {number[]} color2 - Конечный цвет в формате [r, g, b].
+   * @param {number} factor - Фактор интерполяции (от 0 до 1).
+   * @returns {string} - Интерполированный цвет в формате "rgb(r, g, b)".
+   */
+  private static interpolateColor(color1: number[], color2: number[], factor: number): string {
+    const result = color1.slice();
+    for (let i = 0; i < 3; i += 1) {
+      result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+    }
+    return `rgb(${result[0]}, ${result[1]}, ${result[2]})`;
+  }
+
+  /**
+   * @method updateBackgroundColor
+   * @private
+   * @description Обновляет цвет фона мира в зависимости от счета для создания цикла дня и ночи.
+   */
+  private updateBackgroundColor(): void {
+    const { score } = this.world;
+    const cycleDuration = 2000; // Один полный цикл "день-ночь-день"
+    const halfCycle = cycleDuration / 2;
+
+    const dayColor = [135, 206, 235]; // Sky Blue
+    const nightColor = [0, 0, 139];     // Dark Blue
+
+    const cyclePosition = score % cycleDuration;
+
+    let factor;
+    if (cyclePosition < halfCycle) {
+      // От дня к ночи
+      factor = cyclePosition / halfCycle;
+      this.world.backgroundColor = GameController.interpolateColor(dayColor, nightColor, factor);
+    } else {
+      // От ночи ко дню
+      factor = (cyclePosition - halfCycle) / halfCycle;
+      this.world.backgroundColor = GameController.interpolateColor(nightColor, dayColor, factor);
     }
   }
 
@@ -151,7 +197,7 @@ export class GameController {
     this.lastTime = timestamp;
 
     this.update(deltaTime);
-    this.renderer.clear();
+    this.renderer.clear(this.world);
     this.renderer.draw(this.player, this.world);
     this.frameId = requestAnimationFrame(this.gameLoop.bind(this));
   }

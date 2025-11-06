@@ -2,6 +2,7 @@ import { GameState } from './GameState';
 import { Obstacle } from './Obstacle';
 
 export interface BackgroundObject {
+  spriteName: string;
   x: number;
   y: number;
   width: number;
@@ -43,6 +44,9 @@ export class World {
 
   cloudSpawnTimer: number;
 
+  backgroundColor: string;
+
+
   /**
    * @constructor
    * @param {number} groundLevel - Начальный уровень земли.
@@ -59,5 +63,6 @@ export class World {
     this.highScore = 0;
     this.obstacleSpawnTimer = 0;
     this.cloudSpawnTimer = 0;
+    this.backgroundColor = '#87CEEB'; // Sky Blue for day
   }
 }
